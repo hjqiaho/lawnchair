@@ -1094,7 +1094,7 @@ public class Launcher extends StatefulActivity<LauncherState> implements Launche
             mWorkspace.setClipChildren(false);
         }
         // When multiple pages are visible, show persistent page indicator
-        mWorkspace.getPageIndicator().setShouldAutoHide(!state.hasFlag(FLAG_MULTI_PAGE));
+//        mWorkspace.getPageIndicator().setShouldAutoHide(!state.hasFlag(FLAG_MULTI_PAGE));
 
         mPrevLauncherState = mStateManager.getCurrentStableState();
         if (mPrevLauncherState != state && ALL_APPS.equals(state)

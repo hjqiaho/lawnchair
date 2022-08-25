@@ -50,6 +50,7 @@ import android.text.TextUtils;
 import android.util.ArrayMap;
 import android.util.Log;
 import android.util.LongSparseArray;
+import android.util.Pair;
 import android.util.TimingLogger;
 
 import androidx.annotation.Nullable;
@@ -247,6 +248,13 @@ public class LoaderTask implements Runnable {
             }
             logASplit(logger, "loadAllApps");
 
+            //cczheng add for load all app on workspace
+            if (LauncherAppState.isDisableAllApps()) {
+                android.util.Log.e("Launcher3", "verifyApplications()");
+                verifyApplications();
+            }
+            //end
+
             verifyNotStopped();
             mResults.bindAllApps();
             logASplit(logger, "bindAllApps");
@@ -329,6 +337,32 @@ public class LoaderTask implements Runnable {
         }
         TraceHelper.INSTANCE.endSection(traceToken);
     }
+
+    //cczheng add for load all app on workspace
+    private void verifyApplications() {
+        final Context context = mApp.getContext();
+        ArrayList<Pair<ItemInfo, Object>> installQueue = new ArrayList<>();
+        final List<UserHandle> profiles = mUserManager.getUserProfiles();
+        for (UserHandle user : profiles) {
+            final List<LauncherActivityInfo> apps = mLauncherApps.getActivityList(null, user);
+            android.util.Log.i("Launcher3", "apps.size " + apps.size());
+            ArrayList<ItemInstallQueue.PendingInstallShortcutInfo> added = new ArrayList<ItemInstallQueue.PendingInstallShortcutInfo>();
+            synchronized (this) {
+                for (LauncherActivityInfo app : apps) {
+                    ItemInstallQueue.PendingInstallShortcutInfo pendingInstallShortcutInfo
+                        = new ItemInstallQueue.PendingInstallShortcutInfo(app.getComponentName().getPackageName(), app.getUser());
+                    added.add(pendingInstallShortcutInfo);
+                    installQueue.add(pendingInstallShortcutInfo.getItemInfo(context));
+                    android.util.Log.d("Launcher3", "app pkg "+app.getComponentName().getPackageName());
+                }
+            }
+            if (!added.isEmpty()) {
+                android.util.Log.i("Launcher3", "installQueue.size "+installQueue.size());
+                mApp.getModel().addAndBindAddedWorkspaceItems(installQueue);
+            }
+        }
+    }
+    //end
 
     public synchronized void stopLocked() {
         mStopped = true;

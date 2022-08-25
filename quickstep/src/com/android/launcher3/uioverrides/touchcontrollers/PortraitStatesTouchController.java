@@ -30,6 +30,7 @@ import android.view.MotionEvent;
 
 import com.android.launcher3.DeviceProfile;
 import com.android.launcher3.Launcher;
+import com.android.launcher3.LauncherAppState;
 import com.android.launcher3.LauncherState;
 import com.android.launcher3.allapps.AllAppsTransitionController;
 import com.android.launcher3.anim.Interpolators;
@@ -79,6 +80,11 @@ public class PortraitStatesTouchController extends AbstractStateChangeTouchContr
 
     @Override
     protected boolean canInterceptTouch(MotionEvent ev) {
+        //cczheng add
+        if (LauncherAppState.isDisableAllApps()){
+             android.util.Log.e("Launcher3", "canInterceptTouch()");
+             return false;
+         }//end
         // If we are swiping to all apps instead of overview, allow it from anywhere.
         boolean interceptAnywhere = mLauncher.isInState(NORMAL);
         if (mCurrentAnimation != null) {

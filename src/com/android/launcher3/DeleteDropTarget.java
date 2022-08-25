@@ -94,9 +94,14 @@ public class DeleteDropTarget extends ButtonDropTarget {
      */
     private void setTextBasedOnDragSource(ItemInfo item) {
         if (!TextUtils.isEmpty(mText)) {
-            mText = getResources().getString(canRemove(item)
+            //cczheng add for hide deletedroptarget [S]
+            if (LauncherAppState.isDisableAllApps()) {
+                android.util.Log.e("Launcher3", "hide delete drop target");
+                mText = getResources().getString(isCanDrop(item)
                     ? R.string.remove_drop_target_label
                     : android.R.string.cancel);
+            }
+            //cczheng add for hide deletedroptarget [E]
             setContentDescription(mText);
             requestLayout();
         }
@@ -105,13 +110,19 @@ public class DeleteDropTarget extends ButtonDropTarget {
     private boolean canRemove(ItemInfo item) {
         return item.id != ItemInfo.NO_ID;
     }
-
+    private boolean isCanDrop(ItemInfo item){
+        return !(item.itemType == LauncherSettings.Favorites.ITEM_TYPE_APPLICATION ||
+            item.itemType == LauncherSettings.Favorites.ITEM_TYPE_FOLDER);
+    }
     /**
      * Set mControlType depending on the drag item.
      */
     private void setControlTypeBasedOnDragSource(ItemInfo item) {
-        mLauncherEvent = item.id != ItemInfo.NO_ID ? LAUNCHER_ITEM_DROPPED_ON_REMOVE
+        //cczheng add for hide deletedroptarget [S]
+        if (LauncherAppState.isDisableAllApps()) {
+            mLauncherEvent = isCanDrop(item) ? LAUNCHER_ITEM_DROPPED_ON_REMOVE
                 : LAUNCHER_ITEM_DROPPED_ON_CANCEL;
+        }//end
     }
 
     @Override
@@ -147,8 +158,10 @@ public class DeleteDropTarget extends ButtonDropTarget {
                 modelWriter.abortDelete();
                 mLauncher.getStatsLogManager().logger().log(LAUNCHER_UNDO);
             };
-            Snackbar.show(mLauncher, R.string.item_removed, R.string.undo,
+            if (isCanDrop(item)){
+                Snackbar.show(mLauncher, R.string.item_removed, R.string.undo,
                     modelWriter::commitDelete, onUndoClicked);
+            }
         }
     }
 
@@ -160,9 +173,12 @@ public class DeleteDropTarget extends ButtonDropTarget {
         // Remove the item from launcher and the db, we can ignore the containerInfo in this call
         // because we already remove the drag view from the folder (if the drag originated from
         // a folder) in Folder.beginDrag()
-        mLauncher.removeItem(view, item, true /* deleteFromDb */);
-        mLauncher.getWorkspace().stripEmptyScreens();
-        mLauncher.getDragLayer()
+        //cczheng add if juge is need remove item from workspace
+        if (!LauncherAppState.isDisableAllApps() || isCanDrop(item)) {
+            mLauncher.removeItem(view, item, true /* deleteFromDb */);
+            mLauncher.getWorkspace().stripEmptyScreens();
+            mLauncher.getDragLayer()
                 .announceForAccessibility(getContext().getString(R.string.item_removed));
+        }//end
     }
 }

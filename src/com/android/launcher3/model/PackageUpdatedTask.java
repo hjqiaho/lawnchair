@@ -32,6 +32,7 @@ import android.content.pm.ShortcutInfo;
 import android.os.UserHandle;
 import android.os.UserManager;
 import android.util.Log;
+import android.util.Pair;
 
 import com.android.launcher3.Launcher;
 import com.android.launcher3.LauncherAppState;
@@ -42,6 +43,7 @@ import com.android.launcher3.icons.BitmapInfo;
 import com.android.launcher3.icons.IconCache;
 import com.android.launcher3.icons.LauncherIcons;
 import com.android.launcher3.logging.FileLog;
+import com.android.launcher3.model.data.AppInfo;
 import com.android.launcher3.model.data.ItemInfo;
 import com.android.launcher3.model.data.LauncherAppWidgetInfo;
 import com.android.launcher3.model.data.WorkspaceItemInfo;
@@ -369,7 +371,43 @@ public class PackageUpdatedTask extends BaseModelUpdateTask {
             }
             bindUpdatedWidgets(dataModel);
         }
+        //cczheng add for load new install app on workspace
+        if (LauncherAppState.isDisableAllApps()) {
+            android.util.Log.e("cczLauncher3", "updateToWorkSpace()");
+            updateToWorkSpace(context, app, appsList);
+        }//end
     }
+    //cczheng add for load new install app on workspace
+    public void updateToWorkSpace(Context context, LauncherAppState app , AllAppsList appsList){
+        ArrayList<Pair<ItemInfo, Object>> installQueue = new ArrayList<>();
+        // final List<UserHandle> profiles = UserManagerCompat.getInstance(context).getUserProfiles();
+        UserManager mUserManager = context.getSystemService(UserManager.class);
+        LauncherApps launcherApps = context.getSystemService(LauncherApps.class);
+        final List<UserHandle> profiles = mUserManager.getUserProfiles();
+        ArrayList<ItemInstallQueue.PendingInstallShortcutInfo> added
+            = new ArrayList<ItemInstallQueue.PendingInstallShortcutInfo>();
+
+        for (UserHandle user : profiles) {
+            // final List<LauncherActivityInfo> apps = LauncherAppsCompat.getInstance(context).getActivityList(null, user);
+            final List<LauncherActivityInfo> apps = launcherApps.getActivityList(null, user);
+            synchronized (this) {
+                for (LauncherActivityInfo info : apps) {
+                    for (AppInfo appInfo : appsList.data) {
+                        if(info.getComponentName().equals(appInfo.componentName)){
+                            ItemInstallQueue.PendingInstallShortcutInfo mPendingInstallShortcutInfo
+                                =  new ItemInstallQueue.PendingInstallShortcutInfo(info.getComponentName().getPackageName(), info.getUser());
+                            added.add(mPendingInstallShortcutInfo);
+                            installQueue.add(mPendingInstallShortcutInfo.getItemInfo(context));
+                        }
+                    }
+                }
+            }
+        }
+        if (!added.isEmpty()) {
+            app.getModel().addAndBindAddedWorkspaceItems(installQueue);
+        }
+    }
+    //end
 
     /**
      * Updates {@param si}'s intent to point to a new ComponentName.

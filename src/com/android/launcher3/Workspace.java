@@ -95,6 +95,7 @@ import com.android.launcher3.model.data.ItemInfo;
 import com.android.launcher3.model.data.LauncherAppWidgetInfo;
 import com.android.launcher3.model.data.SearchActionItemInfo;
 import com.android.launcher3.model.data.WorkspaceItemInfo;
+import com.android.launcher3.pageindicators.PageIndicatorDots;
 import com.android.launcher3.pageindicators.WorkspacePageIndicator;
 import com.android.launcher3.popup.PopupContainerWithArrow;
 import com.android.launcher3.statemanager.StateManager;
@@ -141,7 +142,7 @@ import app.lawnchair.smartspace.SmartspaceAppWidgetProvider;
  * Each page contains a number of icons, folders or widgets the user can
  * interact with. A workspace is meant to be used with a fixed width only.
  */
-public class Workspace extends PagedView<WorkspacePageIndicator>
+public class Workspace extends PagedView<PageIndicatorDots>
         implements DropTarget, DragSource, View.OnTouchListener,
         DragController.DragListener, Insettable, StateHandler<LauncherState>,
         WorkspaceLayoutManager, LauncherBindableItemsContainer {

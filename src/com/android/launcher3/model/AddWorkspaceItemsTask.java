@@ -86,9 +86,12 @@ public class AddWorkspaceItemsTask extends BaseModelUpdateTask {
                     }
 
                     // b/139663018 Short-circuit this logic if the icon is a system app
-                    if (PackageManagerHelper.isSystemApp(app.getContext(), item.getIntent())) {
-                        continue;
-                    }
+                    //cczheng add this for no drawer need show system app icon
+                    if (!LauncherAppState.isDisableAllApps()) {
+                        if (PackageManagerHelper.isSystemApp(app.getContext(), item.getIntent())) {
+                            continue;
+                        }
+                    }//end
                 }
 
                 if (item.itemType == LauncherSettings.Favorites.ITEM_TYPE_APPLICATION) {

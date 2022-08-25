@@ -341,7 +341,7 @@ class PreferenceManager2(private val context: Context) : PreferenceManager {
 
     val swipeUpGestureHandler = serializablePreference<GestureHandlerConfig>(
         key = stringPreferencesKey("swipe_up_gesture_handler"),
-        defaultValue = GestureHandlerConfig.OpenAppDrawer
+        defaultValue = GestureHandlerConfig.NoOp
     )
 
     val swipeDownGestureHandler = serializablePreference<GestureHandlerConfig>(

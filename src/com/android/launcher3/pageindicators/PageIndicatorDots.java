@@ -23,18 +23,27 @@ import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.animation.ValueAnimator.AnimatorUpdateListener;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Outline;
 import android.graphics.Paint;
 import android.graphics.Paint.Style;
+import android.graphics.Rect;
 import android.graphics.RectF;
 import android.util.AttributeSet;
 import android.util.Property;
+import android.view.Gravity;
 import android.view.View;
 import android.view.ViewOutlineProvider;
 import android.view.animation.Interpolator;
 import android.view.animation.OvershootInterpolator;
+import android.widget.FrameLayout;
 
+import com.android.launcher3.DeviceProfile;
+import com.android.launcher3.Insettable;
+import com.android.launcher3.Launcher;
 import com.android.launcher3.R;
 import com.android.launcher3.Utilities;
 import com.android.launcher3.util.Themes;
@@ -45,7 +54,7 @@ import app.lawnchair.theme.color.ColorTokens;
  * {@link PageIndicator} which shows dots per page. The active page is shown with the current
  * accent color.
  */
-public class PageIndicatorDots extends View implements PageIndicator {
+public class PageIndicatorDots extends View implements PageIndicator, Insettable {
 
     private static final float SHIFT_PER_ANIMATION = 0.5f;
     private static final float SHIFT_THRESHOLD = 0.1f;
@@ -99,6 +108,7 @@ public class PageIndicatorDots extends View implements PageIndicator {
     private ObjectAnimator mAnimator;
 
     private float[] mEntryAnimationRadiusFactors;
+    private final Launcher mLauncher;
 
     public PageIndicatorDots(Context context) {
         this(context, null);
@@ -113,13 +123,31 @@ public class PageIndicatorDots extends View implements PageIndicator {
 
         mCirclePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         mCirclePaint.setStyle(Style.FILL);
-        mCirclePaint.setColor(ColorTokens.FolderPaginationColor.resolveColor(context));
+        mCirclePaint.setColor(ColorTokens.ColorBackground.resolveColor(context));
         mDotRadius = getResources().getDimension(R.dimen.page_indicator_dot_size) / 2;
         setOutlineProvider(new MyOutlineProver());
 
         mIsRtl = Utilities.isRtl(getResources());
+        mLauncher = Launcher.getLauncher(context);
     }
+    //cczheng add for change WorkspacePageIndicator line to dot
+    @Override
+    public void setInsets(Rect insets) {
+        DeviceProfile grid = mLauncher.getDeviceProfile();
+        FrameLayout.LayoutParams lp = (FrameLayout.LayoutParams) getLayoutParams();
 
+        if (grid.isVerticalBarLayout()) {
+            Rect padding = grid.workspacePadding;
+            lp.leftMargin = padding.left + grid.workspaceCellPaddingXPx;
+            lp.rightMargin = padding.right + grid.workspaceCellPaddingXPx;
+            lp.bottomMargin = padding.bottom;
+        } else {
+            lp.leftMargin = lp.rightMargin = 0;
+            lp.gravity = Gravity.CENTER_HORIZONTAL | Gravity.BOTTOM;
+            lp.bottomMargin = grid.hotseatBarSizePx + insets.bottom;
+        }
+        setLayoutParams(lp);
+    }//end
     @Override
     public void setScroll(int currentScroll, int totalScroll) {
         if (mNumPages > 1) {
@@ -232,7 +260,7 @@ public class PageIndicatorDots extends View implements PageIndicator {
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         // Add extra spacing of mDotRadius on all sides so than entry animation could be run.
         int width = MeasureSpec.getMode(widthMeasureSpec) == MeasureSpec.EXACTLY ?
-                MeasureSpec.getSize(widthMeasureSpec) : (int) ((mNumPages * 3 + 2) * mDotRadius);
+                MeasureSpec.getSize(widthMeasureSpec) : (int) (((mNumPages * 3 + 2) * mDotRadius) +30);
         int height= MeasureSpec.getMode(heightMeasureSpec) == MeasureSpec.EXACTLY ?
                 MeasureSpec.getSize(heightMeasureSpec) : (int) (4 * mDotRadius);
         setMeasuredDimension(width, height);
@@ -240,6 +268,18 @@ public class PageIndicatorDots extends View implements PageIndicator {
 
     @Override
     protected void onDraw(Canvas canvas) {
+        // 绘图
+        // 从资源文件中生成位图
+        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher_home_background);
+        int mBitWidth = 20;
+        int mBitHeight = 20;
+
+        Rect mSrcRect = new Rect(0, 0, mBitWidth, mBitHeight);
+        int left = 0;
+        int top = getHeight()/2 - mBitHeight / 2;
+        Rect mDestRect = new Rect(left, top, left + mBitWidth, top + mBitHeight);
+        canvas.drawBitmap(bitmap,mSrcRect,mDestRect,new Paint());
+
         // Draw all page indicators;
         float circleGap = 3 * mDotRadius;
         float startX = (getWidth() - mNumPages * circleGap + mDotRadius) / 2;

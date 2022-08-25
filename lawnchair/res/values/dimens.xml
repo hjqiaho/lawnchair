@@ -83,7 +83,7 @@
     <dimen name="key_text_shadow_dy">0.5dp</dimen>
     <dimen name="key_text_shadow_radius">0.5dp</dimen>
     <dimen name="page_indicator_dot_margin">3dp</dimen>
-    <dimen name="page_indicator_dot_size">6dp</dimen>
+    <dimen name="page_indicator_dot_size">12dp</dimen>
     <dimen name="page_indicator_padding_start">2dp</dimen>
     <dimen name="page_indicator_padding_top_bottom">8dp</dimen>
     <dimen name="page_indicator_width">16dp</dimen>

@@ -67,7 +67,8 @@ public abstract class BaseModelUpdateTask implements ModelUpdateTask {
                 Log.d(TAG, "Ignoring model task since loader is pending=" + this);
             }
             // Loader has not yet run.
-            return;
+            //return;
+            //cczheng annotaion
         }
         execute(mApp, mDataModel, mAllAppsList);
     }
