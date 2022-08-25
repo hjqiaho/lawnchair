@@ -17,6 +17,7 @@ package com.android.launcher3.logging;
 
 import static com.android.launcher3.logging.StatsLogManager.LauncherEvent.LAUNCHER_ALLAPPS_CLOSE_DOWN;
 import static com.android.launcher3.logging.StatsLogManager.LauncherEvent.LAUNCHER_ALLAPPS_OPEN_UP;
+import static com.android.launcher3.logging.StatsLogManager.LauncherEvent.LAUNCHER_CUSTOMVIEW_OPEN_UP;
 import static com.android.launcher3.logging.StatsLogManager.LauncherEvent.LAUNCHER_HOME_GESTURE;
 import static com.android.launcher3.logging.StatsLogManager.LauncherEvent.LAUNCHER_OVERVIEW_GESTURE;
 
@@ -52,6 +53,7 @@ public class StatsLogManager implements ResourceBasedOverride {
     public static final int LAUNCHER_STATE_OVERVIEW = 3;
     public static final int LAUNCHER_STATE_ALLAPPS = 4;
     public static final int LAUNCHER_STATE_UNCHANGED = 5;
+    public static final int LAUNCHER_STATE_CUSTOMVIEW = 6;
 
     private InstanceId mInstanceId;
 
@@ -72,9 +74,9 @@ public class StatsLogManager implements ResourceBasedOverride {
         } else if (startState != LAUNCHER_STATE_ALLAPPS
                 && targetState == LAUNCHER_STATE_ALLAPPS) {
             return LAUNCHER_ALLAPPS_OPEN_UP;
-        } else if (startState == LAUNCHER_STATE_ALLAPPS
-                && targetState != LAUNCHER_STATE_ALLAPPS) {
-            return LAUNCHER_ALLAPPS_CLOSE_DOWN;
+        } else if (startState == LAUNCHER_STATE_CUSTOMVIEW
+                && targetState != LAUNCHER_STATE_CUSTOMVIEW) {
+            return LAUNCHER_CUSTOMVIEW_OPEN_UP;
         }
         return fallbackEvent; // TODO fix
     }
@@ -521,8 +523,10 @@ public class StatsLogManager implements ResourceBasedOverride {
         LAUNCHER_TASKBAR_LONGPRESS_SHOW(897),
 
         @UiEvent(doc = "User clicks on the search icon on header to launch search in app.")
-        LAUNCHER_ALLAPPS_SEARCHINAPP_LAUNCH(913);
+        LAUNCHER_ALLAPPS_SEARCHINAPP_LAUNCH(913),
 
+        @UiEvent(doc = "User swipes or fling in UP direction to open custom view.")
+        LAUNCHER_CUSTOMVIEW_OPEN_UP(914);
         // ADD MORE
 
         private final int mId;

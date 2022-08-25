@@ -119,7 +119,9 @@ public class OverviewState extends LauncherState {
     public static float getDefaultSwipeHeight(Launcher launcher) {
         return LayoutUtils.getDefaultSwipeHeight(launcher, launcher.getDeviceProfile());
     }
-
+    public static float getDefaultSwipeWidth(Launcher launcher) {
+        return LayoutUtils.getDefaultSwipeWidth(launcher, launcher.getDeviceProfile());
+    }
     @Override
     protected float getDepthUnchecked(Context context) {
         //TODO revert when b/178661709 is fixed

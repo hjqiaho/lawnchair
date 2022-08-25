@@ -41,6 +41,7 @@ import androidx.savedstate.SavedStateRegistryOwner
 import androidx.savedstate.setViewTreeSavedStateRegistryOwner
 import app.lawnchair.LawnchairApp.Companion.showQuickstepWarningIfNecessary
 import app.lawnchair.gestures.GestureController
+import app.lawnchair.gestures.HorizontalSwipeTouchController
 import app.lawnchair.gestures.VerticalSwipeTouchController
 import app.lawnchair.gestures.config.GestureHandlerConfig
 import app.lawnchair.nexuslauncher.OverlayCallbackImpl
@@ -270,7 +271,8 @@ class LawnchairLauncher : QuickstepLauncher(), LifecycleOwner,
 
     override fun createTouchControllers(): Array<TouchController> {
         val verticalSwipeController = VerticalSwipeTouchController(this, gestureController)
-        return arrayOf<TouchController>(verticalSwipeController) + super.createTouchControllers()
+        val horizontalSwipeController = HorizontalSwipeTouchController(this, gestureController)
+        return arrayOf<TouchController>(verticalSwipeController,horizontalSwipeController) + super.createTouchControllers()
     }
 
     override fun handleHomeTap() {

@@ -67,7 +67,11 @@
             android:layout_height="match_parent"
             android:id="@+id/scrim_view"
             android:background="@android:color/transparent" />
-
+        <include
+            android:id="@+id/custom_view"
+            layout="@layout/custom_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
         <include
             android:id="@+id/apps_view"
             layout="@layout/all_apps"

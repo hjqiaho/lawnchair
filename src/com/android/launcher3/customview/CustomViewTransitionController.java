@@ -13,18 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.android.launcher3.allapps;
+package com.android.launcher3.customview;
 
-import static com.android.launcher3.LauncherState.ALL_APPS;
-import static com.android.launcher3.LauncherState.ALL_APPS_CONTENT;
+import static com.android.launcher3.LauncherState.CUSTOM_VIEW;
+import static com.android.launcher3.LauncherState.CUSTOM_VIEW_CONTENT;
 import static com.android.launcher3.LauncherState.NORMAL;
 import static com.android.launcher3.anim.Interpolators.DEACCEL_1_7;
 import static com.android.launcher3.anim.Interpolators.LINEAR;
 import static com.android.launcher3.anim.PropertySetter.NO_ANIM_PROPERTY_SETTER;
-import static com.android.launcher3.states.StateAnimationConfig.ANIM_ALL_APPS_FADE;
 import static com.android.launcher3.states.StateAnimationConfig.ANIM_CUSTOM_VIEW_FADE;
 import static com.android.launcher3.states.StateAnimationConfig.ANIM_VERTICAL_PROGRESS;
-import static com.android.launcher3.util.SystemUiController.UI_STATE_ALLAPPS;
+import static com.android.launcher3.util.SystemUiController.UI_CUSTOM_VIEW;
 
 import android.animation.Animator;
 import android.animation.Animator.AnimatorListener;
@@ -48,8 +47,8 @@ import com.android.launcher3.states.StateAnimationConfig;
 import com.android.launcher3.views.ScrimView;
 
 /**
- * Handles AllApps view transition.
- * 1) Slides all apps view using direct manipulation
+ * Handles Custom view transition.
+ * 1) Slides Custom view using direct manipulation
  * 2) When finger is released, animate to either top or bottom accordingly.
  * <p/>
  * Algorithm:
@@ -57,45 +56,45 @@ import com.android.launcher3.views.ScrimView;
  * If release velocity < THRES1, snap according to either top or bottom depending on whether it's
  * closer to top or closer to the page indicator.
  */
-public class AllAppsTransitionController
+public class CustomViewTransitionController
         implements StateHandler<LauncherState>, OnDeviceProfileChangeListener {
     // This constant should match the second derivative of the animator interpolator.
     public static final float INTERP_COEFF = 1.7f;
 
-    public static final FloatProperty<AllAppsTransitionController> ALL_APPS_PROGRESS =
-            new FloatProperty<AllAppsTransitionController>("allAppsProgress") {
+    public static final FloatProperty<CustomViewTransitionController> CUSTOM_VIEW_PROGRESS =
+            new FloatProperty<CustomViewTransitionController>("customViewProgress") {
 
                 @Override
-                public Float get(AllAppsTransitionController controller) {
+                public Float get(CustomViewTransitionController controller) {
                     return controller.mProgress;
                 }
 
                 @Override
-                public void setValue(AllAppsTransitionController controller, float progress) {
+                public void setValue(CustomViewTransitionController controller, float progress) {
                     controller.setProgress(progress);
                 }
             };
 
-    private AllAppsContainerView mAppsView;
+    private CustomViewContainerView mCustomView;
 
     private final Launcher mLauncher;
     private boolean mIsVerticalLayout;
 
     // Animation in this class is controlled by a single variable {@link mProgress}.
-    // Visually, it represents top y coordinate of the all apps container if multiplied with
+    // Visually, it represents top y coordinate of the Custom view container if multiplied with
     // {@link mShiftRange}.
 
-    // When {@link mProgress} is 0, all apps container is pulled up.
-    // When {@link mProgress} is 1, all apps container is pulled down.
+    // When {@link mProgress} is 0, Custom view container is pulled up.
+    // When {@link mProgress} is 1, Custom view container is pulled down.
     private float mShiftRange;      // changes depending on the orientation
     private float mProgress;        // [0, 1], mShiftRange * mProgress = shiftCurrent
 
     private float mScrollRangeDelta = 0;
     private ScrimView mScrimView;
 
-    public AllAppsTransitionController(Launcher l) {
+    public CustomViewTransitionController(Launcher l) {
         mLauncher = l;
-        mShiftRange = mLauncher.getDeviceProfile().heightPx;
+        mShiftRange =  - mLauncher.getDeviceProfile().widthPx;
         mProgress = 1f;
 
         mIsVerticalLayout = mLauncher.getDeviceProfile().isVerticalBarLayout();
@@ -103,7 +102,7 @@ public class AllAppsTransitionController
     }
 
     public float getShiftRange() {
-        return mShiftRange;
+        return  - mShiftRange;
     }
 
     @Override
@@ -121,13 +120,13 @@ public class AllAppsTransitionController
      * Note this method should not be called outside this class. This is public because it is used
      * in xml-based animations which also handle updating the appropriate UI.
      *
-     * @param progress value between 0 and 1, 0 shows all apps and 1 shows workspace
+     * @param progress value between 0 and 1, 0 shows Custom view and 1 shows workspace
      * @see #setState(LauncherState)
      * @see #setStateWithAnimation(LauncherState, StateAnimationConfig, PendingAnimation)
      */
     public void setProgress(float progress) {
         mProgress = progress;
-        mAppsView.setTranslationY(mProgress * mShiftRange);
+        mCustomView.setTranslationX(mProgress * mShiftRange);
     }
 
     public float getProgress() {
@@ -170,14 +169,14 @@ public class AllAppsTransitionController
 
         setAlphas(toState, config, builder);
 
-        if (ALL_APPS.equals(toState) && mLauncher.isInState(NORMAL)) {
+        if (CUSTOM_VIEW.equals(toState) && mLauncher.isInState(NORMAL)) {
             mLauncher.getAppsView().performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY,
                     HapticFeedbackConstants.FLAG_IGNORE_VIEW_SETTING);
         }
     }
 
     public Animator createSpringAnimation(float... progressValues) {
-        return ObjectAnimator.ofFloat(this, ALL_APPS_PROGRESS, progressValues);
+        return ObjectAnimator.ofFloat(this, CUSTOM_VIEW_PROGRESS, progressValues);
     }
 
     /**
@@ -185,14 +184,14 @@ public class AllAppsTransitionController
      */
     public void setAlphas(LauncherState state, StateAnimationConfig config, PropertySetter setter) {
         int visibleElements = state.getVisibleElements(mLauncher);
-        boolean hasAllAppsContent = (visibleElements & ALL_APPS_CONTENT) != 0;
+        boolean hasAllAppsContent = (visibleElements & CUSTOM_VIEW_CONTENT) != 0;
 
-        Interpolator allAppsFade = config.getInterpolator(ANIM_ALL_APPS_FADE, LINEAR);
-        setter.setViewAlpha(mAppsView, hasAllAppsContent ? 1 : 0, allAppsFade);
+        Interpolator customViewFade = config.getInterpolator(ANIM_CUSTOM_VIEW_FADE, LINEAR);
+        setter.setViewAlpha(mCustomView, hasAllAppsContent ? 1 : 0, customViewFade);
 
         boolean shouldProtectHeader =
-                ALL_APPS == state || mLauncher.getStateManager().getState() == ALL_APPS;
-        mScrimView.setDrawingController(shouldProtectHeader ? mAppsView : null);
+            CUSTOM_VIEW == state || mLauncher.getStateManager().getState() == CUSTOM_VIEW;
+        mScrimView.setDrawingController(shouldProtectHeader ? mCustomView : null);
     }
 
     public AnimatorListener getProgressAnimatorListener() {
@@ -202,15 +201,15 @@ public class AllAppsTransitionController
     /**
      * see Launcher#setupViews
      */
-    public void setupViews(ScrimView scrimView, AllAppsContainerView appsView) {
+    public void setupViews(ScrimView scrimView, CustomViewContainerView customView) {
         mScrimView = scrimView;
-        mAppsView = appsView;
+        mCustomView = customView;
         if (FeatureFlags.ENABLE_DEVICE_SEARCH.get() && Utilities.ATLEAST_R) {
-            mLauncher.getSystemUiController().updateUiState(UI_STATE_ALLAPPS,
+            mLauncher.getSystemUiController().updateUiState(UI_CUSTOM_VIEW,
                     View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
                             | View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
         }
-        mAppsView.setScrimView(scrimView);
+        mCustomView.setScrimView(scrimView);
     }
 
     /**
@@ -218,7 +217,7 @@ public class AllAppsTransitionController
      */
     public void setScrollRangeDelta(float delta) {
         mScrollRangeDelta = delta;
-        mShiftRange = mLauncher.getDeviceProfile().heightPx - mScrollRangeDelta;
+        mShiftRange =  - mLauncher.getDeviceProfile().widthPx + mScrollRangeDelta;
     }
 
     /**
@@ -228,7 +227,7 @@ public class AllAppsTransitionController
     private void onProgressAnimationEnd() {
         if (FeatureFlags.ENABLE_DEVICE_SEARCH.get()) return;
         if (Float.compare(mProgress, 1f) == 0) {
-            mAppsView.reset(false /* animate */);
+            mCustomView.reset(false /* animate */);
         }
     }
 }

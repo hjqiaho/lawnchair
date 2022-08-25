@@ -349,6 +349,16 @@ class PreferenceManager2(private val context: Context) : PreferenceManager {
         defaultValue = GestureHandlerConfig.OpenNotifications
     )
 
+    val swipeRightGestureHandler = serializablePreference<GestureHandlerConfig>(
+        key = stringPreferencesKey("swipe_right_gesture_handler"),
+        defaultValue = GestureHandlerConfig.OpenCustomView
+    )
+
+    val swipeLeftGestureHandler = serializablePreference<GestureHandlerConfig>(
+        key = stringPreferencesKey("swipe_left_gesture_handler"),
+        defaultValue = GestureHandlerConfig.NoOp
+    )
+
     val homePressGestureHandler = serializablePreference<GestureHandlerConfig>(
         key = stringPreferencesKey("home_press_gesture_handler"),
         defaultValue = GestureHandlerConfig.NoOp

@@ -279,6 +279,8 @@
     <string name="gesture_double_tap">輕觸兩次</string>
     <string name="gesture_swipe_up">向上滑動</string>
     <string name="gesture_swipe_down">向下滑動</string>
+    <string name="gesture_swipe_right">向右滑動</string>
+    <string name="gesture_swipe_left">向左滑動</string>
     <string name="gesture_home_tap">輕觸主畫面按鈕</string>
     <string name="gesture_back_tap">輕觸返回按鈕</string>
     <string name="gesture_handler_no_op">什麼也不做</string>
@@ -287,6 +289,7 @@
     <string name="gesture_handler_open_app_option">開啟應用程式</string>
     <string name="gesture_handler_open_app_config">開啟 %1$s</string>
     <string name="gesture_handler_open_app_drawer">查看所有應用程式</string>
+    <string name="gesture_handler_open_custom_view">打開自定義頁面</string>
     <string name="gesture_handler_open_app_search">開啟應用程式搜尋</string>
     <string name="gesture_handler_open_search">開啟搜尋</string>
     <string name="pick_app_for_gesture">選取應用程式</string>

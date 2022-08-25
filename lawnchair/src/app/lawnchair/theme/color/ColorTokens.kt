@@ -60,6 +60,8 @@ object ColorTokens {
     @JvmField val AllAppsScrimColor = ColorBackground
     @JvmField val AllAppsTabBackgroundSelected = DayNightColorToken(Accent1_100, Accent2_100)
 
+    @JvmField val  CustomViewScrimColor = ColorBackground
+
     @JvmField val FocusHighlight = DayNightColorToken(Neutral1_0, Neutral1_700)
     @JvmField val GroupHighlight = Surface
     @JvmField val OverviewScrim = DayNightColorToken(Neutral2_500.setLStar(87.0), Neutral1_800)

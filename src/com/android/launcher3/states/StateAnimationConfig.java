@@ -58,6 +58,7 @@ public class StateAnimationConfig {
             ANIM_OVERVIEW_TRANSLATE_Y,
             ANIM_OVERVIEW_FADE,
             ANIM_ALL_APPS_FADE,
+            ANIM_CUSTOM_VIEW_FADE,
             ANIM_SCRIM_FADE,
             ANIM_OVERVIEW_MODAL,
             ANIM_DEPTH,
@@ -80,8 +81,9 @@ public class StateAnimationConfig {
     public static final int ANIM_OVERVIEW_MODAL = 12;
     public static final int ANIM_DEPTH = 13;
     public static final int ANIM_OVERVIEW_ACTIONS_FADE = 14;
+    public static final int ANIM_CUSTOM_VIEW_FADE = 15;
 
-    private static final int ANIM_TYPES_COUNT = 15;
+    private static final int ANIM_TYPES_COUNT = 16;
 
     protected final Interpolator[] mInterpolators = new Interpolator[ANIM_TYPES_COUNT];
 

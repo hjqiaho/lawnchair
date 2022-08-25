@@ -279,6 +279,8 @@
     <string name="gesture_double_tap">双击</string>
     <string name="gesture_swipe_up">向上滑动</string>
     <string name="gesture_swipe_down">向下滑动</string>
+    <string name="gesture_swipe_right">向右滑动</string>
+    <string name="gesture_swipe_left">向左滑动</string>
     <string name="gesture_home_tap">点击主屏幕按钮</string>
     <string name="gesture_back_tap">点击后退按钮</string>
     <string name="gesture_handler_no_op">不执行任何操作</string>
@@ -287,6 +289,7 @@
     <string name="gesture_handler_open_app_option">打开应用</string>
     <string name="gesture_handler_open_app_config">打开 %1$s</string>
     <string name="gesture_handler_open_app_drawer">打开应用抽屉</string>
+    <string name="gesture_handler_open_custom_view">打开自定义页面</string>
     <string name="gesture_handler_open_app_search">打开应用搜索</string>
     <string name="gesture_handler_open_search">打开搜索</string>
     <string name="pick_app_for_gesture">选择应用</string>

@@ -32,6 +32,14 @@ fun GesturePreferences() {
                 label = stringResource(id = R.string.gesture_swipe_down)
             )
             GestureHandlerPreference(
+                adapter = prefs.swipeRightGestureHandler.getAdapter(),
+                label = stringResource(id = R.string.gesture_swipe_right)
+            )
+            GestureHandlerPreference(
+                adapter = prefs.swipeLeftGestureHandler.getAdapter(),
+                label = stringResource(id = R.string.gesture_swipe_left)
+            )
+            GestureHandlerPreference(
                 adapter = prefs.homePressGestureHandler.getAdapter(),
                 label = stringResource(id = R.string.gesture_home_tap)
             )

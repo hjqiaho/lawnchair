@@ -27,6 +27,7 @@ import android.content.pm.PackageInfo.REQUESTED_PERMISSION_GRANTED
 import android.content.pm.PackageManager
 import android.content.res.Resources
 import android.graphics.Bitmap
+import android.graphics.Color
 import android.net.Uri
 import android.os.Looper
 import android.provider.OpenableColumns
@@ -160,6 +161,10 @@ fun getAllAppsScrimColor(context: Context): Int {
     val scrimColor = ColorTokens.AllAppsScrimColor.resolveColor(context)
     val alpha = (opacity * 255).roundToInt()
     return ColorUtils.setAlphaComponent(scrimColor, alpha)
+}
+
+fun getCustomViewScrimColor(context: Context): Int {
+    return Color.TRANSPARENT
 }
 
 fun Context.checkPackagePermission(packageName: String, permissionName: String): Boolean {

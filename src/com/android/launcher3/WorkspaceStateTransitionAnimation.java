@@ -149,8 +149,12 @@ public class WorkspaceStateTransitionAnimation {
                 ANIM_HOTSEAT_TRANSLATE, translationInterpolator);
         propertySetter.setFloat(hotseat, VIEW_TRANSLATE_Y,
                 hotseatScaleAndTranslation.translationY, hotseatTranslationInterpolator);
+        propertySetter.setFloat(hotseat, VIEW_TRANSLATE_X,
+            hotseatScaleAndTranslation.translationX, hotseatTranslationInterpolator);
         propertySetter.setFloat(mWorkspace.getPageIndicator(), VIEW_TRANSLATE_Y,
                 hotseatScaleAndTranslation.translationY, hotseatTranslationInterpolator);
+        propertySetter.setFloat(mWorkspace.getPageIndicator(), VIEW_TRANSLATE_X,
+            hotseatScaleAndTranslation.translationX, hotseatTranslationInterpolator);
 
         if (!config.hasAnimationFlag(SKIP_SCRIM)) {
             setScrim(propertySetter, state, config);

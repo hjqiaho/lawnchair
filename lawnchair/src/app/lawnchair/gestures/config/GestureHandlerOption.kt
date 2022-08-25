@@ -30,6 +30,7 @@ abstract class GestureHandlerOption(
     object Sleep : Simple(GestureHandlerConfig.Sleep)
     object OpenNotifications : Simple(GestureHandlerConfig.OpenNotifications)
     object OpenAppDrawer : Simple(GestureHandlerConfig.OpenAppDrawer)
+    object OpenCustomView : Simple(GestureHandlerConfig.OpenCustomView)
     object OpenAppSearch : Simple(GestureHandlerConfig.OpenAppSearch)
     object OpenSearch : Simple(GestureHandlerConfig.OpenSearch)
 

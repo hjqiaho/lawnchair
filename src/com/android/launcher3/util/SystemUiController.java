@@ -32,6 +32,7 @@ public class SystemUiController {
     public static final int UI_STATE_WIDGET_BOTTOM_SHEET = 2;
     public static final int UI_STATE_FULLSCREEN_TASK = 3;
     public static final int UI_STATE_ALLAPPS = 4;
+    public static final int UI_CUSTOM_VIEW = 5;
 
     public static final int FLAG_LIGHT_NAV = 1 << 0;
     public static final int FLAG_DARK_NAV = 1 << 1;

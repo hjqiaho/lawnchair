@@ -43,6 +43,10 @@ sealed class GestureHandlerConfig {
     object OpenAppDrawer : Simple(R.string.gesture_handler_open_app_drawer, ::OpenAppDrawerGestureHandler)
 
     @Serializable
+    @SerialName("OpenCustomView")
+    object OpenCustomView : Simple(R.string.gesture_handler_open_custom_view, ::OpenCustomViewGestureHandler)
+
+    @Serializable
     @SerialName("openAppSearch")
     object OpenAppSearch : Simple(R.string.gesture_handler_open_app_search, ::OpenAppSearchGestureHandler)
 

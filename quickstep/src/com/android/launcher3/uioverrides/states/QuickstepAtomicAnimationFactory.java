@@ -18,6 +18,7 @@ package com.android.launcher3.uioverrides.states;
 import static android.view.View.VISIBLE;
 
 import static com.android.launcher3.LauncherState.ALL_APPS;
+import static com.android.launcher3.LauncherState.CUSTOM_VIEW;
 import static com.android.launcher3.LauncherState.HINT_STATE;
 import static com.android.launcher3.LauncherState.HINT_STATE_TWO_BUTTON;
 import static com.android.launcher3.LauncherState.NORMAL;
@@ -35,6 +36,7 @@ import static com.android.launcher3.anim.Interpolators.LINEAR;
 import static com.android.launcher3.anim.Interpolators.OVERSHOOT_1_2;
 import static com.android.launcher3.anim.Interpolators.clampToProgress;
 import static com.android.launcher3.states.StateAnimationConfig.ANIM_ALL_APPS_FADE;
+import static com.android.launcher3.states.StateAnimationConfig.ANIM_CUSTOM_VIEW_FADE;
 import static com.android.launcher3.states.StateAnimationConfig.ANIM_DEPTH;
 import static com.android.launcher3.states.StateAnimationConfig.ANIM_OVERVIEW_ACTIONS_FADE;
 import static com.android.launcher3.states.StateAnimationConfig.ANIM_OVERVIEW_FADE;
@@ -161,6 +163,7 @@ public class QuickstepAtomicAnimationFactory extends
             }
             config.setInterpolator(ANIM_WORKSPACE_FADE, OVERSHOOT_1_2);
             config.setInterpolator(ANIM_ALL_APPS_FADE, OVERSHOOT_1_2);
+            config.setInterpolator(ANIM_CUSTOM_VIEW_FADE, OVERSHOOT_1_2);
             config.setInterpolator(ANIM_OVERVIEW_SCALE, OVERSHOOT_1_2);
             config.setInterpolator(ANIM_DEPTH, OVERSHOOT_1_2);
             config.setInterpolator(ANIM_SCRIM_FADE, t -> {
@@ -184,6 +187,13 @@ public class QuickstepAtomicAnimationFactory extends
             config.setInterpolator(ANIM_SCRIM_FADE, Interpolators.clampToProgress(DEACCEL,
                     1 - ALL_APPS_SCRIM_OPAQUE_THRESHOLD,
                     1 - ALL_APPS_SCRIM_VISIBLE_THRESHOLD));
+        } else if (fromState == CUSTOM_VIEW && toState == NORMAL) {
+            config.setInterpolator(ANIM_CUSTOM_VIEW_FADE, Interpolators.clampToProgress(DEACCEL,
+                1 - ALL_APPS_CONTENT_FADE_MAX_CLAMPING_THRESHOLD,
+                1 - ALL_APPS_CONTENT_FADE_MIN_CLAMPING_THRESHOLD));
+            config.setInterpolator(ANIM_SCRIM_FADE, Interpolators.clampToProgress(DEACCEL,
+                1 - ALL_APPS_SCRIM_OPAQUE_THRESHOLD,
+                1 - ALL_APPS_SCRIM_VISIBLE_THRESHOLD));
         }
     }
 }

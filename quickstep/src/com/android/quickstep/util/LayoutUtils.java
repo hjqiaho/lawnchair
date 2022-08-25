@@ -37,7 +37,14 @@ public class LayoutUtils {
         }
         return swipeHeight;
     }
-
+    /**
+     * The width for the swipe right motion
+     * TODO need change to customview config
+     */
+    public static float getDefaultSwipeWidth(Context context, DeviceProfile dp) {
+        float swipeWidth = dp.widthPx;
+        return swipeWidth;
+    }
     public static int getShelfTrackingDistance(Context context, DeviceProfile dp,
             PagedOrientationHandler orientationHandler) {
         // Track the bottom of the window.

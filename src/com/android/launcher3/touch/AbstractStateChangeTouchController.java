@@ -15,13 +15,16 @@
  */
 package com.android.launcher3.touch;
 
+import static com.android.launcher3.LauncherAnimUtils.CUSTOMVIEW_SUCCESS_TRANSITION_PROGRESS;
 import static com.android.launcher3.LauncherAnimUtils.SUCCESS_TRANSITION_PROGRESS;
 import static com.android.launcher3.LauncherAnimUtils.newCancelListener;
 import static com.android.launcher3.LauncherState.ALL_APPS;
+import static com.android.launcher3.LauncherState.CUSTOM_VIEW;
 import static com.android.launcher3.LauncherState.NORMAL;
 import static com.android.launcher3.LauncherState.OVERVIEW;
 import static com.android.launcher3.anim.Interpolators.scrollInterpolatorForVelocity;
 import static com.android.launcher3.logging.StatsLogManager.LAUNCHER_STATE_ALLAPPS;
+import static com.android.launcher3.logging.StatsLogManager.LAUNCHER_STATE_CUSTOMVIEW;
 import static com.android.launcher3.logging.StatsLogManager.LAUNCHER_STATE_HOME;
 import static com.android.launcher3.logging.StatsLogManager.LAUNCHER_STATE_OVERVIEW;
 import static com.android.launcher3.logging.StatsLogManager.LauncherEvent.LAUNCHER_UNKNOWN_SWIPEDOWN;
@@ -30,6 +33,7 @@ import static com.android.launcher3.util.DisplayController.getSingleFrameMs;
 
 import android.animation.Animator.AnimatorListener;
 import android.animation.ValueAnimator;
+import android.util.Log;
 import android.view.MotionEvent;
 
 import com.android.launcher3.Launcher;
@@ -73,6 +77,7 @@ public abstract class AbstractStateChangeTouchController
     private float mDisplacementShift;
     private boolean mCanBlockFling;
     private boolean mAllAppsOvershootStarted;
+    private boolean mCustomViewOvershootStarted;
 
     public AbstractStateChangeTouchController(Launcher l, SingleAxisSwipeDetector.Direction dir) {
         mLauncher = l;
@@ -202,6 +207,7 @@ public abstract class AbstractStateChangeTouchController
         updateProgress(progress);
         boolean isDragTowardPositive = mSwipeDirection.isPositive(
                 displacement - mDisplacementShift);
+        Log.d("onDrag" ,"progress = "+progress +", displacement = "+displacement+", mDisplacementShift = "+mDisplacementShift);
         if (progress <= 0) {
             if (reinitCurrentAnimation(false, isDragTowardPositive)) {
                 mDisplacementShift = displacement;
@@ -222,6 +228,11 @@ public abstract class AbstractStateChangeTouchController
                 mLauncher.getAppsView().onPull(progress - 1f, progress - 1f);
             }
 
+            if (mToState == CUSTOM_VIEW) {
+                mCustomViewOvershootStarted = true;
+                // 1f, value when all apps container hit the top
+                mLauncher.getCustomView().onPull(progress - 1f, progress - 1f);
+            }
         } else {
             mFlingBlockCheck.onEvent();
 
@@ -235,6 +246,8 @@ public abstract class AbstractStateChangeTouchController
         if (!mIsLogContainerSet) {
             if (mStartState == ALL_APPS) {
                 mStartContainerType = LAUNCHER_STATE_ALLAPPS;
+            }else if (mStartState == CUSTOM_VIEW) {
+                mStartContainerType = LAUNCHER_STATE_CUSTOMVIEW;
             } else if (mStartState == NORMAL) {
                 mStartContainerType = LAUNCHER_STATE_HOME;
             } else if (mStartState == OVERVIEW) {
@@ -285,8 +298,11 @@ public abstract class AbstractStateChangeTouchController
                             ? mToState : mFromState;
             // snap to top or bottom using the release velocity
         } else {
-            targetState =
-                    (interpolatedProgress > SUCCESS_TRANSITION_PROGRESS) ? mToState : mFromState;
+            if (mToState == CUSTOM_VIEW){
+                targetState = (interpolatedProgress > CUSTOMVIEW_SUCCESS_TRANSITION_PROGRESS) ? mToState : mFromState;
+            }else {
+                targetState = (interpolatedProgress > SUCCESS_TRANSITION_PROGRESS) ? mToState : mFromState;
+            }
         }
 
         final float endProgress;
@@ -338,6 +354,13 @@ public abstract class AbstractStateChangeTouchController
                 mAllAppsOvershootStarted = false;
             } else {
                 mLauncher.getAppsView().addSpringFromFlingUpdateListener(anim, velocity, progress);
+            }
+        }else if (targetState == CUSTOM_VIEW) {
+            if (mCustomViewOvershootStarted) {
+                mLauncher.getCustomView().onRelease();
+                mCustomViewOvershootStarted = false;
+            } else {
+                mLauncher.getCustomView().addSpringFromFlingUpdateListener(anim, velocity, progress);
             }
         }
         anim.start();

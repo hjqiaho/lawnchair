@@ -59,6 +59,7 @@ import com.android.launcher3.model.data.ItemInfo;
 import com.android.launcher3.popup.SystemShortcut;
 import com.android.launcher3.statemanager.StateManager.AtomicAnimationFactory;
 import com.android.launcher3.uioverrides.states.QuickstepAtomicAnimationFactory;
+import com.android.launcher3.uioverrides.touchcontrollers.LandscapeStatesTouchController;
 import com.android.launcher3.uioverrides.touchcontrollers.NavBarToHomeTouchController;
 import com.android.launcher3.uioverrides.touchcontrollers.NoButtonNavbarToOverviewTouchController;
 import com.android.launcher3.uioverrides.touchcontrollers.NoButtonQuickSwitchTouchController;
@@ -322,10 +323,12 @@ public class QuickstepLauncher extends BaseQuickstepLauncher {
                         ? new TransposedQuickSwitchTouchController(this)
                         : new QuickSwitchTouchController(this));
                 list.add(new PortraitStatesTouchController(this));
+                list.add(new LandscapeStatesTouchController(this));
                 break;
             case THREE_BUTTONS:
             default:
                 list.add(new PortraitStatesTouchController(this));
+                list.add(new LandscapeStatesTouchController(this));
         }
 
         if (!getDeviceProfile().isMultiWindowMode) {

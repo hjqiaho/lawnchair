@@ -131,7 +131,7 @@
     <string name="font_weight_bold">Bold</string>
     <string name="font_weight_extra_bold">Extra Bold</string>
     <string name="font_weight_extra_black">Black</string>
-    
+
     <string name="reset_font">Reset</string>
 
     <!-- colorpreference/* -->
@@ -185,7 +185,7 @@
 
       <string name="reset_custom_icons">Reset Custom Icons</string>
       <string name="reset_custom_icons_confirmation">All custom icons will be reset. Do you want to continue?</string>
-    
+
     <!-- <string name="widget_button_text" /> (unknown source)-->
       <string name="force_rounded_widgets">Rounded Corners</string>
       <string name="allow_widget_overlap">Allow Overlap</string>
@@ -260,11 +260,11 @@
     <string name="app_label">App</string>
     <string name="website_label">Website</string>
     <string name="qsb_search_provider_app_required">App required.</string>
-    
+
     <!-- AppDrawerPrefences -->
     <!-- app_drawer_label -->
     <!-- general_label -->
-      <string name="hidden_apps_label">Hidden Apps</string> 
+      <string name="hidden_apps_label">Hidden Apps</string>
       <string name="background_opacity">Background Opacity</string>
 
     <string name="pref_category_search">Search</string>
@@ -276,7 +276,7 @@
     <!-- <string name="grid" /> -->
       <string name="app_drawer_columns">App Drawer Columns</string>
       <string name="row_height_label">Row Height</string>
-    
+
     <!--
     <string name="icons" />
       <string name="icon_size" />
@@ -299,12 +299,14 @@
     <!-- <string name="grid" /> -->
     <string name="max_folder_columns">Max. Folder Columns</string>
     <string name="max_folder_rows">Max. Folder Rows</string>
-    
+
     <!-- GesturePreference -->
     <!-- <string name="gestures_label" /> -->
     <string name="gesture_double_tap">Double Tap</string>
     <string name="gesture_swipe_up">Swipe Up</string>
     <string name="gesture_swipe_down">Swipe Down</string>
+    <string name="gesture_swipe_right">Swipe Right</string>
+    <string name="gesture_swipe_left">Swipe Left</string>
     <string name="gesture_home_tap">Home Button Tap</string>
     <string name="gesture_back_tap">Back Button Tap</string>
 
@@ -314,6 +316,7 @@
     <string name="gesture_handler_open_app_option">Open App</string>
     <string name="gesture_handler_open_app_config">Open %1$s</string>
     <string name="gesture_handler_open_app_drawer">Open App Drawer</string>
+    <string name="gesture_handler_open_custom_view">Open Custom View</string>
     <string name="gesture_handler_open_app_search">Open App Search</string>
     <string name="gesture_handler_open_search">Open Search</string>
 
@@ -329,7 +332,7 @@
       <string name="action_share">Share</string>
       <string name="action_lens">Lens</string>
       <string name="recents_clear_all">Clear All</string>
-      
+
     <string name="window_corner_radius_label">Screen Corner Radius</string>
       <string name="override_window_corner_radius_label">Custom Screen Corner Radius</string>
       <string name="window_corner_radius_description">When you swipe up to open Recents, the current app follows your finger, shrinking into a card. Use this slider to adjust the corner radius of the card when it’s nearly full-screen such that it matches the corners of your screen.</string>
@@ -343,7 +346,7 @@
     <string name="twitter" translatable="false">Twitter</string>
     <string name="github" translatable="false">GitHub</string>
     <string name="discord" translatable="false">Discord</string>
-    
+
     <string name="product">Product</string>
       <string name="design_and_development">Design &amp; Development</string>
       <string name="development">Development</string>

@@ -20,12 +20,14 @@ import static com.android.launcher3.AbstractFloatingView.TYPE_ALL_APPS_EDU;
 import static com.android.launcher3.LauncherAnimUtils.SUCCESS_TRANSITION_PROGRESS;
 import static com.android.launcher3.LauncherAnimUtils.newCancelListener;
 import static com.android.launcher3.LauncherState.ALL_APPS;
+import static com.android.launcher3.LauncherState.CUSTOM_VIEW;
 import static com.android.launcher3.LauncherState.NORMAL;
 import static com.android.launcher3.allapps.AllAppsTransitionController.ALL_APPS_PROGRESS;
 import static com.android.launcher3.anim.AnimatorListeners.forSuccessCallback;
 import static com.android.launcher3.anim.Interpolators.DEACCEL_3;
 import static com.android.launcher3.config.FeatureFlags.ENABLE_ALL_APPS_EDU;
 import static com.android.launcher3.config.FeatureFlags.ENABLE_QUICKSTEP_LIVE_TILE;
+import static com.android.launcher3.customview.CustomViewTransitionController.CUSTOM_VIEW_PROGRESS;
 import static com.android.launcher3.logging.StatsLogManager.LauncherEvent.LAUNCHER_HOME_GESTURE;
 import static com.android.systemui.shared.system.ActivityManagerWrapper.CLOSE_SYSTEM_WINDOWS_REASON_RECENTS;
 
@@ -44,6 +46,7 @@ import com.android.launcher3.anim.Interpolators;
 import com.android.launcher3.anim.PendingAnimation;
 import com.android.launcher3.compat.AccessibilityManagerCompat;
 import com.android.launcher3.config.FeatureFlags;
+import com.android.launcher3.customview.CustomViewTransitionController;
 import com.android.launcher3.states.StateAnimationConfig;
 import com.android.launcher3.touch.SingleAxisSwipeDetector;
 import com.android.launcher3.util.TouchController;
@@ -157,6 +160,18 @@ public class NavBarToHomeTouchController implements TouchController,
                     .mapToProgress(PULLBACK_INTERPOLATOR, 0, 0.5f));
 
             allAppsController.setAlphas(mEndState, config, builder);
+        } else if (mStartState == CUSTOM_VIEW) {
+            CustomViewTransitionController customViewController = mLauncher.getCustomViewController();
+            builder.setFloat(customViewController, CUSTOM_VIEW_PROGRESS,
+                -mPullbackDistance / customViewController.getShiftRange(), PULLBACK_INTERPOLATOR);
+
+            // Slightly fade out all apps content to further distinguish from scrolling.
+            StateAnimationConfig config = new StateAnimationConfig();
+            config.duration = accuracy;
+            config.setInterpolator(StateAnimationConfig.ANIM_CUSTOM_VIEW_FADE, Interpolators
+                .mapToProgress(PULLBACK_INTERPOLATOR, 0, 0.5f));
+
+            customViewController.setAlphas(mEndState, config, builder);
         }
         AbstractFloatingView topView = AbstractFloatingView.getTopOpenView(mLauncher);
         if (topView != null) {

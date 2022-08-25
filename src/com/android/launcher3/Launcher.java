@@ -132,6 +132,8 @@ import com.android.launcher3.anim.AnimatorListeners;
 import com.android.launcher3.anim.PropertyListBuilder;
 import com.android.launcher3.compat.AccessibilityManagerCompat;
 import com.android.launcher3.config.FeatureFlags;
+import com.android.launcher3.customview.CustomViewContainerView;
+import com.android.launcher3.customview.CustomViewTransitionController;
 import com.android.launcher3.dot.DotInfo;
 import com.android.launcher3.dragndrop.DragController;
 import com.android.launcher3.dragndrop.DragLayer;
@@ -173,6 +175,7 @@ import com.android.launcher3.states.RotationHelper;
 import com.android.launcher3.testing.TestLogging;
 import com.android.launcher3.testing.TestProtocol;
 import com.android.launcher3.touch.AllAppsSwipeController;
+import com.android.launcher3.touch.CustomViewSwipeController;
 import com.android.launcher3.touch.ItemClickHandler;
 import com.android.launcher3.uioverrides.plugins.PluginManagerWrapper;
 import com.android.launcher3.util.ActivityResultInfo;
@@ -322,6 +325,11 @@ public class Launcher extends StatefulActivity<LauncherState> implements Launche
     AllAppsContainerView mAppsView;
     AllAppsTransitionController mAllAppsController;
 
+    // Main container view for the custom view.
+    @Thunk
+    CustomViewContainerView mCustomView;
+    CustomViewTransitionController mCustomViewController;
+
     // Scrim view for the all apps and overview state.
     @Thunk
     ScrimView mScrimView;
@@ -466,6 +474,7 @@ public class Launcher extends StatefulActivity<LauncherState> implements Launche
 
         mDragController = new LauncherDragController(this);
         mAllAppsController = new AllAppsTransitionController(this);
+        mCustomViewController = new CustomViewTransitionController(this);
         mStateManager = new StateManager<>(this, NORMAL);
 
         mOnboardingPrefs = createOnboardingPrefs(mSharedPrefs);
@@ -1246,12 +1255,16 @@ public class Launcher extends StatefulActivity<LauncherState> implements Launche
         // Setup Apps
         mAppsView = findViewById(R.id.apps_view);
 
+        //Custom View
+        mCustomView = findViewById(R.id.custom_view);
+
         // Setup Scrim
         mScrimView = findViewById(R.id.scrim_view);
 
         // Setup the drag controller (drop targets have to be added in reverse order in priority)
         mDropTargetBar.setup(mDragController);
         mAllAppsController.setupViews(mScrimView, mAppsView);
+        mCustomViewController.setupViews(mScrimView, mCustomView);
     }
 
     /**
@@ -1476,6 +1489,9 @@ public class Launcher extends StatefulActivity<LauncherState> implements Launche
     public AllAppsTransitionController getAllAppsController() {
         return mAllAppsController;
     }
+    public CustomViewTransitionController getCustomViewController() {
+        return mCustomViewController;
+    }
 
     @Override
     public DragLayer getDragLayer() {
@@ -1485,7 +1501,9 @@ public class Launcher extends StatefulActivity<LauncherState> implements Launche
     public AllAppsContainerView getAppsView() {
         return mAppsView;
     }
-
+    public CustomViewContainerView getCustomView() {
+        return mCustomView;
+    }
     public Workspace getWorkspace() {
         return mWorkspace;
     }
@@ -1574,6 +1592,7 @@ public class Launcher extends StatefulActivity<LauncherState> implements Launche
                 // Reset the apps view
                 if (!alreadyOnHome) {
                     mAppsView.reset(isStarted() /* animate */);
+                    mCustomView.reset(isStarted() /* animate */);
                 }
 
                 if (shouldMoveToDefaultScreen && !mWorkspace.isHandlingTouch()) {
@@ -3055,11 +3074,12 @@ public class Launcher extends StatefulActivity<LauncherState> implements Launche
     @Override
     protected void collectStateHandlers(List<StateHandler> out) {
         out.add(getAllAppsController());
+        out.add(getCustomViewController());
         out.add(getWorkspace());
     }
 
     public TouchController[] createTouchControllers() {
-        return new TouchController[] {getDragController(), new AllAppsSwipeController(this)};
+        return new TouchController[] {getDragController(), new AllAppsSwipeController(this),new CustomViewSwipeController(this)};
     }
 
     public void useFadeOutAnimationForLauncherStart(CancellationSignal signal) { }

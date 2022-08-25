@@ -31,6 +31,7 @@ import static com.android.launcher3.logging.StatsLogManager.LauncherEvent.LAUNCH
 import static com.android.launcher3.logging.StatsLogManager.LauncherEvent.LAUNCHER_UNKNOWN_SWIPEUP;
 import static com.android.launcher3.logging.StatsLogManager.getLauncherAtomEvent;
 import static com.android.launcher3.states.StateAnimationConfig.ANIM_ALL_APPS_FADE;
+import static com.android.launcher3.states.StateAnimationConfig.ANIM_CUSTOM_VIEW_FADE;
 import static com.android.launcher3.states.StateAnimationConfig.ANIM_DEPTH;
 import static com.android.launcher3.states.StateAnimationConfig.ANIM_VERTICAL_PROGRESS;
 import static com.android.launcher3.states.StateAnimationConfig.ANIM_WORKSPACE_FADE;
@@ -192,6 +193,7 @@ public class NoButtonQuickSwitchTouchController implements TouchController,
         StateAnimationConfig nonOverviewBuilder = new StateAnimationConfig();
         nonOverviewBuilder.setInterpolator(ANIM_WORKSPACE_FADE, FADE_OUT_INTERPOLATOR);
         nonOverviewBuilder.setInterpolator(ANIM_ALL_APPS_FADE, FADE_OUT_INTERPOLATOR);
+        nonOverviewBuilder.setInterpolator(ANIM_CUSTOM_VIEW_FADE, FADE_OUT_INTERPOLATOR);
         nonOverviewBuilder.setInterpolator(ANIM_WORKSPACE_SCALE, FADE_OUT_INTERPOLATOR);
         nonOverviewBuilder.setInterpolator(ANIM_DEPTH, FADE_OUT_INTERPOLATOR);
         nonOverviewBuilder.setInterpolator(ANIM_VERTICAL_PROGRESS, TRANSLATE_OUT_INTERPOLATOR);

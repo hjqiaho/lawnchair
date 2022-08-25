@@ -28,6 +28,7 @@ import static com.android.launcher3.testing.TestProtocol.OVERVIEW_SPLIT_SELECT_O
 import static com.android.launcher3.testing.TestProtocol.OVERVIEW_STATE_ORDINAL;
 import static com.android.launcher3.testing.TestProtocol.QUICK_SWITCH_STATE_ORDINAL;
 import static com.android.launcher3.testing.TestProtocol.SPRING_LOADED_STATE_ORDINAL;
+import static com.android.launcher3.testing.TestProtocol.CUSTOM_VIEW_STATE_ORDINAL;
 
 import android.content.Context;
 import android.graphics.Color;
@@ -39,6 +40,7 @@ import com.android.launcher3.states.HintState;
 import com.android.launcher3.states.SpringLoadedState;
 import com.android.launcher3.testing.TestProtocol;
 import com.android.launcher3.uioverrides.states.AllAppsState;
+import com.android.launcher3.uioverrides.states.CustomViewState;
 import com.android.launcher3.uioverrides.states.OverviewState;
 
 import java.util.Arrays;
@@ -62,6 +64,7 @@ public abstract class LauncherState implements BaseState<LauncherState> {
     public static final int CLEAR_ALL_BUTTON = 1 << 4;
     public static final int WORKSPACE_PAGE_INDICATOR = 1 << 5;
     public static final int SPLIT_PLACHOLDER_VIEW = 1 << 6;
+    public static final int CUSTOM_VIEW_CONTENT = 1 << 7;
 
     // Flag indicating workspace has multiple pages visible.
     public static final int FLAG_MULTI_PAGE = BaseState.getFlag(0);
@@ -93,7 +96,7 @@ public abstract class LauncherState implements BaseState<LauncherState> {
                 }
             };
 
-    private static final LauncherState[] sAllStates = new LauncherState[10];
+    private static final LauncherState[] sAllStates = new LauncherState[11];
 
     /**
      * TODO: Create a separate class for NORMAL state.
@@ -123,6 +126,7 @@ public abstract class LauncherState implements BaseState<LauncherState> {
     public static final LauncherState SPRING_LOADED = new SpringLoadedState(
             SPRING_LOADED_STATE_ORDINAL);
     public static final LauncherState ALL_APPS = new AllAppsState(ALL_APPS_STATE_ORDINAL);
+    public static final LauncherState CUSTOM_VIEW = new CustomViewState(CUSTOM_VIEW_STATE_ORDINAL);
     public static final LauncherState HINT_STATE = new HintState(HINT_STATE_ORDINAL);
     public static final LauncherState HINT_STATE_TWO_BUTTON = new HintState(
             HINT_STATE_TWO_BUTTON_ORDINAL, LAUNCHER_STATE_OVERVIEW);
